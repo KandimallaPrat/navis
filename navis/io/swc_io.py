@@ -202,8 +202,11 @@ class SwcReader(base.BaseReader):
             cn['connector_id'] = None
             cn['type'] = name
             to_concat.append(cn)
-
-        return pd.concat(to_concat, axis=0)
+        non_empty = [df for df in to_concat if not df.empty]
+        if non_empty:
+            return pd.concat(non_empty, axis=0)
+        else:
+            return None
 
 
 def sanitise_nodes(nodes: pd.DataFrame, allow_empty=True) -> pd.DataFrame:
